@@ -1,0 +1,409 @@
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prajwal Mutalik — Robotics & Physical AI</title>
+<meta name="description" content="Prajwal Mutalik — Systems Engineer building robotics software, autonomous systems and Physical AI.">
+<style>
+:root{
+  --bg:#070a0f;--surface:#0d1219;--surface2:#111821;--text:#f1f5f9;
+  --muted:#8d99a8;--muted2:#687585;--line:#202a36;--accent:#79aefb;
+  --accent-soft:rgba(121,174,251,.11);--max:1160px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:86px}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  line-height:1.55;overflow-x:hidden
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;
+  background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:55px 55px;mask-image:linear-gradient(to bottom,#000,transparent 72%)
+}
+a{color:inherit;text-decoration:none}
+.container{width:min(calc(100% - 44px),var(--max));margin:auto}
+
+/* NAV */
+nav{
+  position:fixed;inset:0 0 auto;z-index:50;height:72px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  background:rgba(7,10,15,.76);backdrop-filter:blur(18px)
+}
+.nav-inner{height:100%;display:flex;align-items:center;justify-content:space-between}
+.logo{font-weight:850;letter-spacing:-.045em;font-size:1.05rem}
+.logo i{font-style:normal;color:var(--accent)}
+.navlinks{display:flex;align-items:center;gap:4px}
+.navlinks a{
+  color:var(--muted);font-size:.82rem;font-weight:650;padding:8px 12px;border-radius:8px;
+  transition:.2s
+}
+.navlinks a:hover,.navlinks a.active{color:var(--text);background:rgba(255,255,255,.055)}
+.navlinks a.active{box-shadow:inset 0 -1px 0 var(--accent)}
+.menu{display:none;background:none;border:0;color:var(--text);font-size:1.4rem}
+
+/* HERO */
+.hero{min-height:100vh;padding:150px 0 90px;display:flex;align-items:center;position:relative}
+.hero-grid{display:grid;grid-template-columns:1fr 310px;gap:80px;align-items:center}
+.eyebrow{
+  display:flex;align-items:center;gap:9px;color:#a9c9f7;font-size:.73rem;
+  letter-spacing:.16em;text-transform:uppercase;font-weight:800
+}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 18px var(--accent)}
+h1{font-size:clamp(3.8rem,7.4vw,6.8rem);line-height:.9;letter-spacing:-.072em;margin:22px 0 28px;max-width:850px}
+h1 span{color:var(--accent)}
+.hero-copy{max-width:690px;color:var(--muted);font-size:1.08rem}
+.hero-copy strong{color:#dce5ef;font-weight:650}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid var(--line);
+  border-radius:9px;font-size:.82rem;font-weight:750;transition:.2s;cursor:pointer
+}
+.btn:hover{transform:translateY(-2px);border-color:#3b4a5d}
+.btn.primary{background:var(--text);color:#080b10;border-color:var(--text)}
+.profile{
+  width:280px;height:340px;border-radius:20px;border:1px solid #293543;
+  background:
+    radial-gradient(circle at 50% 35%,rgba(121,174,251,.14),transparent 42%),
+    linear-gradient(145deg,#111923,#090d13);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  box-shadow:0 25px 80px rgba(0,0,0,.38)
+}
+.profile img{width:100%;height:100%;object-fit:cover;display:none}
+.profile-placeholder{text-align:center;color:var(--muted2);padding:30px}
+.profile-placeholder b{display:block;color:#dce5ef;font-size:2.8rem;letter-spacing:-.08em;margin-bottom:8px}
+.profile-placeholder span{font-size:.72rem}
+
+/* SECTIONS */
+.section{padding:92px 0;border-top:1px solid var(--line)}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:32px}
+.kicker{font-size:.69rem;font-weight:850;letter-spacing:.17em;color:var(--accent);text-transform:uppercase}
+h2{font-size:clamp(2.1rem,4vw,3.25rem);letter-spacing:-.055em;line-height:1;margin:8px 0 0}
+.section-head>p{max-width:460px;color:var(--muted);margin:0;font-size:.92rem}
+
+/* FEATURE */
+.feature{border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#101720,#0a0e14);overflow:hidden}
+.feature-main{padding:31px}
+.feature-title{display:flex;justify-content:space-between;gap:30px;align-items:start}
+.feature h3{font-size:2rem;letter-spacing:-.045em;margin:0 0 6px}
+.feature-desc{color:var(--muted);max-width:780px;margin:0}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}
+.tag{border:1px solid #283441;color:#aebaca;border-radius:99px;padding:4px 9px;font-size:.68rem}
+.arch{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line)}
+.arch div{padding:20px;border-right:1px solid var(--line);font-size:.75rem;color:var(--muted)}
+.arch div:last-child{border-right:0}
+.arch b{display:block;color:var(--text);font-size:.8rem;margin-bottom:3px}
+
+/* CARDS */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:25px;
+  transition:.22s
+}
+.card:hover{transform:translateY(-4px);border-color:#354456;background:#101720}
+.num{font-size:.66rem;font-weight:850;letter-spacing:.12em;color:#566576}
+.card h3{font-size:1.25rem;letter-spacing:-.025em;margin:8px 0 8px}
+.card p{font-size:.88rem;color:var(--muted);margin:0}
+.card .tags{margin-top:16px}
+
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.metric{padding:24px;border-right:1px solid var(--line)}
+.metric:last-child{border-right:0}
+.metric b{font-size:2.1rem;letter-spacing:-.055em;display:block}
+.metric span{font-size:.74rem;color:var(--muted)}
+
+/* STACK */
+.skills{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.skill{padding:19px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.skill b{display:block;font-size:.88rem;margin-bottom:6px}
+.skill span{font-size:.8rem;color:var(--muted)}
+
+/* TIMELINE */
+.timeline{border-left:1px solid #2a3542;margin-left:5px}
+.tline{position:relative;padding:0 0 31px 28px}
+.tline:last-child{padding-bottom:0}
+.tline:before{
+  content:"";position:absolute;left:-4px;top:5px;width:7px;height:7px;border-radius:50%;
+  background:var(--bg);border:1px solid var(--accent)
+}
+.tline .year{font-size:.66rem;letter-spacing:.13em;font-weight:850;color:var(--accent);margin-bottom:4px}
+.tline h3{margin:0 0 4px;font-size:1rem}
+.tline p{margin:0;color:var(--muted);font-size:.85rem}
+
+/* CONTACT */
+.contact{padding:115px 0;text-align:center}
+.contact h2{max-width:800px;margin:10px auto 14px}
+.contact p{max-width:610px;margin:auto;color:var(--muted)}
+.contact .actions{justify-content:center}
+
+/* FOOTER */
+footer{border-top:1px solid var(--line);padding:23px 0;color:var(--muted2);font-size:.7rem}
+footer .container{display:flex;justify-content:space-between}
+
+/* MOBILE */
+@media(max-width:850px){
+  .navlinks{display:none;position:absolute;top:72px;left:12px;right:12px;padding:8px;background:#0c1118;border:1px solid var(--line);border-radius:12px;flex-direction:column;align-items:stretch}
+  .navlinks.open{display:flex}.navlinks a{padding:12px}.menu{display:block}
+  .hero-grid{grid-template-columns:1fr;gap:35px}.profile{width:180px;height:220px;order:-1}
+  .section-head{display:block}.section-head>p{margin-top:14px}.arch{grid-template-columns:repeat(2,1fr)}
+  .arch div:nth-child(2),.arch div:nth-child(4){border-right:0}.arch div:nth-child(-n+3){border-bottom:1px solid var(--line)}
+  .metrics{grid-template-columns:1fr 1fr}.metric:nth-child(2){border-right:0}.metric:nth-child(-n+2){border-bottom:1px solid var(--line)}
+}
+@media(max-width:600px){
+  .container{width:min(calc(100% - 28px),var(--max))}
+  h1{font-size:3.5rem}.grid,.skills{grid-template-columns:1fr}
+  .arch{grid-template-columns:1fr}.arch div{border-right:0!important;border-bottom:1px solid var(--line)}.arch div:last-child{border-bottom:0}
+  .metrics{grid-template-columns:1fr}.metric{border-right:0;border-bottom:1px solid var(--line)}.metric:last-child{border-bottom:0}
+  footer .container{display:block}
+}
+</style>
+</head>
+
+<body>
+<nav>
+  <div class="container nav-inner">
+    <a href="#top" class="logo">Prajwal<i>.</i></a>
+    <button class="menu" aria-label="Open menu" aria-expanded="false">☰</button>
+    <div class="navlinks">
+      <a href="#work">Work</a>
+      <a href="#projects">Projects</a>
+      <a href="#stack">Stack</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> Systems Engineer · Robotics · Physical AI</div>
+      <h1>I build machines that<br><span>perceive, decide & act.</span></h1>
+      <p class="hero-copy">
+        I work at the intersection of <strong>robotics and AI</strong> — building physical systems
+        that connect sensors, intelligence, motion control and real-world action.
+        Currently developing and deploying robotic systems at Sirena Technologies.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="#work">Explore work ↓</a>
+        <a class="btn" href="mailto:prajwalmutalik8@gmail.com">Email ↗</a>
+        <a class="btn" href="https://www.linkedin.com/in/prajwal-m-a46661255/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
+    </div>
+
+    <div class="profile" aria-label="Prajwal Mutalik profile photo">
+      <!-- Replace profile.jpg with your profile photo -->
+      <img id="profilePhoto" src="profile.jpg" alt="Prajwal Mutalik">
+      <div class="profile-placeholder" id="profilePlaceholder">
+        <b>PM</b>
+        <span>PROFILE PHOTO</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="work">
+<div class="container">
+  <div class="section-head">
+    <div><div class="kicker">Featured work</div><h2>Nina — Physical AI Robot</h2></div>
+    <p>My primary professional robotics platform, spanning drive control, perception, autonomy, local AI and deployment.</p>
+  </div>
+  <div class="feature">
+    <div class="feature-main">
+      <div class="feature-title">
+        <div>
+          <h3>From sensors to physical action.</h3>
+          <p class="feature-desc">
+            Developed and deployed the software stack across <strong>three Nina robots and one utility robot</strong>
+            sharing the same core platform. My work spans ODrive/CAN motor control, multi-sensor perception,
+            reactive navigation, computer vision and local voice AI.
+          </p>
+          <div class="tags">
+            <span class="tag">Jetson Orin</span><span class="tag">ODrive S1</span><span class="tag">CAN</span>
+            <span class="tag">LiDAR</span><span class="tag">RealSense D435</span><span class="tag">IMU</span>
+            <span class="tag">TensorRT</span><span class="tag">Local AI</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="arch">
+      <div><b>Sense</b>LiDAR · D435 · IMU</div>
+      <div><b>Perceive</b>Vision · YOLO · TensorRT</div>
+      <div><b>Decide</b>Wander · Heading</div>
+      <div><b>Control</b>CAN · ODrive · PID</div>
+      <div><b>Act</b>BLDC · Encoders · Wheels</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section">
+<div class="container">
+  <div class="section-head">
+    <div><div class="kicker">Engineering depth</div><h2>What I built</h2></div>
+    <p>Where sensors, software and physical mechanisms have to behave as one system.</p>
+  </div>
+  <div class="grid">
+    <article class="card">
+      <div class="num">01 / DRIVE SYSTEM</div><h3>JYQD → ODrive / CAN</h3>
+      <p>Migrated Nina's drive architecture from Raspberry Pi/JYQD to ODrive S1 over CAN. Leveraged built-in PID control and encoder feedback to make straight-line motion more reliable, alongside velocity, reverse and rotational control.</p>
+      <div class="tags"><span class="tag">ODrive S1</span><span class="tag">CAN</span><span class="tag">Encoders</span><span class="tag">PID</span></div>
+    </article>
+    <article class="card">
+      <div class="num">02 / AUTONOMY</div><h3>Wander Navigation</h3>
+      <p>Built and field-tested map-independent reactive navigation using LiDAR, depth sensing and IMU-driven motion primitives. Tested across a 30 m-radius area with approximately 95% successful behavior, then extended with global heading guidance.</p>
+      <div class="tags"><span class="tag">LiDAR</span><span class="tag">D435</span><span class="tag">IMU</span><span class="tag">Reactive Navigation</span></div>
+    </article>
+    <article class="card">
+      <div class="num">03 / COMPUTER VISION</div><h3>Real-Time Perception</h3>
+      <p>Integrated YOLO and TensorRT inference on NVIDIA Jetson, working through GPU initialization and perception-pipeline optimization for reliable real-time robot operation.</p>
+      <div class="tags"><span class="tag">YOLO</span><span class="tag">TensorRT</span><span class="tag">Jetson</span></div>
+    </article>
+    <article class="card">
+      <div class="num">04 / LOCAL AI</div><h3>Voice-Driven Nina</h3>
+      <p>Worked on Nina's local voice stack using Qwen3, Whisper and Piper, connecting speech recognition, language understanding and speech synthesis to physical robot behaviors without cloud inference.</p>
+      <div class="tags"><span class="tag">Qwen3</span><span class="tag">Whisper</span><span class="tag">Piper</span><span class="tag">Local LLM</span></div>
+    </article>
+  </div>
+</div>
+</section>
+
+<section class="section">
+<div class="container">
+  <div class="metrics">
+    <div class="metric"><b>3 + 1</b><span>Nina + utility robot platforms</span></div>
+    <div class="metric"><b>30 m</b><span>Radius used in Wander testing</span></div>
+    <div class="metric"><b>~95%</b><span>Observed successful navigation behavior</span></div>
+    <div class="metric"><b>30</b><span>Students supported in deployment</span></div>
+  </div>
+</div>
+</section>
+
+<section class="section" id="projects">
+<div class="container">
+  <div class="section-head">
+    <div><div class="kicker">Selected projects</div><h2>Beyond Nina</h2></div>
+    <p>Experience across robotic manipulation, automation and robotics deployment systems.</p>
+  </div>
+  <div class="grid">
+    <article class="card">
+      <div class="num">ROBOTIC MANIPULATION</div><h3>Carbot — Automotive Button Testing Robot</h3>
+      <p>Worked on a robotic arm mounted on a gantry, prototyped for automated testing of automotive dashboard buttons through repeatable physical interaction and test execution.</p>
+      <div class="tags"><span class="tag">Robotic Arm</span><span class="tag">Gantry</span><span class="tag">Automation</span></div>
+    </article>
+    <article class="card">
+      <div class="num">ROBOTICS PLATFORM</div><h3>Companion & Deployment Platform</h3>
+      <p>Developed and integrated Android and kiosk capabilities including drive, vision, mapping, actions, D-pad control, audio interaction and OTA deployment tooling for student-facing robotic systems.</p>
+      <div class="tags"><span class="tag">Android</span><span class="tag">Qt</span><span class="tag">Embedded Linux</span><span class="tag">OTA</span></div>
+    </article>
+  </div>
+</div>
+</section>
+
+<section class="section" id="stack">
+<div class="container">
+  <div class="section-head">
+    <div><div class="kicker">Technical stack</div><h2>Tools I work with</h2></div>
+    <p>Technologies I have used hands-on while building and deploying physical robotic systems.</p>
+  </div>
+  <div class="skills">
+    <div class="skill"><b>Robotics & Autonomy</b><span>Mobile Robotics · Autonomous Navigation · Motion Control · Differential Drive · Obstacle Avoidance · SLAM · Odometry · Reactive Navigation · Motion Primitives</span></div>
+    <div class="skill"><b>Perception & AI</b><span>LiDAR · Intel RealSense D435 · Depth Cameras · IMU · Computer Vision · YOLO · TensorRT · Local LLMs · Qwen3 · Whisper · Piper</span></div>
+    <div class="skill"><b>Embedded & Systems</b><span>NVIDIA Jetson Orin · ODrive S1 · CAN · BLDC Motors · Encoders · Linux · GPIO · I2S</span></div>
+    <div class="skill"><b>Programming & Software</b><span>C++ · Python · Java · JavaScript · Git · GitHub · Qt · Android · REST APIs · Debian Packaging</span></div>
+  </div>
+</div>
+</section>
+
+<section class="section" id="about">
+<div class="container">
+  <div class="section-head">
+    <div><div class="kicker">About</div><h2>Closer to the machine.</h2></div>
+    <p>My work has progressively moved from software and prototypes toward complete intelligent physical systems.</p>
+  </div>
+  <div class="timeline">
+    <div class="tline"><div class="year">EARLIER</div><h3>Robotics & Computer Science</h3><p>Built robotics and software projects through college, including robotic manipulation, computer vision and embedded systems.</p></div>
+    <div class="tline"><div class="year">SIRENA</div><h3>Systems Engineer — Robotics & Physical AI</h3><p>Moved into professional robotics, working across drive systems, perception, autonomy, AI interaction and deployment on physical robots.</p></div>
+    <div class="tline"><div class="year">NOW</div><h3>Physical AI</h3><p>Focused on the boundary between intelligence and action: giving machines the ability to perceive their environment, make decisions and act reliably in the real world.</p></div>
+  </div>
+</div>
+</section>
+
+<section class="contact" id="contact">
+<div class="container">
+  <div class="kicker">Let's build</div>
+  <h2>Interested in robotics, Physical AI, or intelligent machines?</h2>
+  <p>I'm interested in systems where AI doesn't stop at a screen — it perceives, reasons and does something in the physical world.</p>
+  <div class="actions">
+    <a class="btn primary" href="mailto:prajwalmutalik8@gmail.com">Get in touch ↗</a>
+    <a class="btn" href="https://www.linkedin.com/in/prajwal-m-a46661255/" target="_blank" rel="noopener">LinkedIn ↗</a>
+    <a class="btn" href="https://github.com/PrajwalMutalik" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
+</div>
+</section>
+</main>
+
+<footer>
+  <div class="container"><span>© 2026 Prajwal Mutalik</span><span>Robotics · Physical AI · Autonomous Systems</span></div>
+</footer>
+
+<script>
+const nav = document.querySelector('nav');
+const links = [...document.querySelectorAll('.navlinks a')];
+const sections = [...document.querySelectorAll('main section[id]')];
+const menu = document.querySelector('.menu');
+const navlinks = document.querySelector('.navlinks');
+
+function setActive(id){
+  links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+}
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting) setActive(entry.target.id);
+  });
+},{rootMargin:'-35% 0px -55% 0px',threshold:0});
+sections.forEach(s=>observer.observe(s));
+
+links.forEach(link=>{
+  link.addEventListener('click', e=>{
+    const target=document.querySelector(link.getAttribute('href'));
+    if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'});}
+    navlinks.classList.remove('open');
+    menu.setAttribute('aria-expanded','false');
+  });
+});
+
+menu.addEventListener('click',()=>{
+  const open=navlinks.classList.toggle('open');
+  menu.setAttribute('aria-expanded',String(open));
+});
+
+window.addEventListener('scroll',()=>{
+  nav.style.background = window.scrollY > 20 ? 'rgba(7,10,15,.91)' : 'rgba(7,10,15,.76)';
+},{passive:true});
+
+const photo=document.getElementById('profilePhoto');
+const placeholder=document.getElementById('profilePlaceholder');
+photo.addEventListener('load',()=>{
+  photo.style.display='block';
+  placeholder.style.display='none';
+});
+photo.addEventListener('error',()=>{
+  photo.style.display='none';
+  placeholder.style.display='block';
+});
+</script>
+</body>
+</html>
+'''
+
+path = Path("/mnt/data/prajwal_robotics_portfolio_refined.html")
+path.write_text(html, encoding="utf-8")
+print(path)
